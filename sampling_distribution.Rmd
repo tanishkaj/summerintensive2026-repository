@@ -1,0 +1,322 @@
+---
+title: "Understanding the Sampling Distribution of the Mean"
+author: "Tanishka Joshi"
+date: "`r Sys.Date()`"
+output:
+  html_notebook:
+    theme: flatly
+    toc: true
+    toc_float: true
+    code_folding: show
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+```
+
+---
+
+## What is a Sampling Distribution?
+
+When you collect data, you're usually working with a **sample** — a subset of a larger **population**. If you calculated the mean of that sample, you'd get one number. But what if you took a *different* sample? You'd likely get a slightly different mean.
+
+The **sampling distribution of the mean** is the distribution of all those possible sample means. It tells us:
+
+- What values the sample mean tends to take
+- How much the sample mean varies from sample to sample
+- How reliable our estimate of the true population mean is
+
+The **Central Limit Theorem (CLT)** is one of the most important results in statistics. It states:
+
+> *No matter what shape the original population has, the sampling distribution of the mean will approach a **normal distribution** as the sample size gets large.*
+
+Let's see this in action.
+
+---
+
+## Step 1: Create a Non-Normal Population
+
+To make this interesting, we'll use a **right-skewed population** (like income, wait times, or reaction times) — something clearly *not* normal. This makes the CLT's magic more dramatic.
+
+```{r create-population}
+set.seed(42)
+
+# Create a large skewed population using an exponential distribution
+# Think of this as representing something like "time until an event occurs"
+population_size <- 100000
+population <- rexp(n = population_size, rate = 0.2)
+
+# True population parameters
+pop_mean <- mean(population)
+pop_sd   <- sd(population)
+
+cat("Population size:", population_size, "\n")
+cat("True population mean:", round(pop_mean, 3), "\n")
+cat("True population SD:  ", round(pop_sd, 3), "\n")
+```
+
+```{r plot-population}
+ggplot(data.frame(x = population), aes(x = x)) +
+  geom_histogram(bins = 80, fill = "#a8d8ea", color = "white", alpha = 0.85) +
+  geom_vline(xintercept = pop_mean, color = "#e8a0bf", linewidth = 1.2, linetype = "dashed") +
+  annotate("text", x = pop_mean + 2, y = Inf, vjust = 2,
+           label = paste("Population mean =", round(pop_mean, 2)),
+           color = "#c97aaa", size = 4) +
+  labs(
+    title = "Our Population Distribution (Exponential / Right-Skewed)",
+    subtitle = "This is clearly NOT normal — it has a long right tail",
+    x = "Value",
+    y = "Count"
+  ) +
+  theme_minimal(base_size = 13)
+```
+
+**What you're seeing:** The population is strongly right-skewed. Most values are small, but a few are very large. The red dashed line is the true mean of the whole population.
+
+---
+
+## Step 2: The Sampling Process
+
+For each of three sample sizes (small, medium, large), we will:
+
+1. Draw 1,000 random samples from the population
+2. Calculate the mean of each sample
+3. Collect all 1,000 sample means into a **sampling distribution**
+
+```{r sampling-function}
+# A function that draws `n_samples` samples of size `sample_size`
+# and returns all the sample means
+get_sample_means <- function(population, sample_size, n_samples = 1000) {
+  replicate(n_samples, mean(sample(population, size = sample_size, replace = FALSE)))
+}
+
+# Define our three sample sizes
+small_n  <- 5
+medium_n <- 30
+large_n  <- 100
+
+# Draw 1000 samples at each size
+set.seed(123)
+means_small  <- get_sample_means(population, small_n)
+means_medium <- get_sample_means(population, medium_n)
+means_large  <- get_sample_means(population, large_n)
+
+cat("Done! Collected 1000 sample means for each sample size.\n")
+```
+
+---
+
+## Step 3: Visualize the Sampling Distributions
+
+Now let's plot all three sampling distributions side by side and compare them to the shape of the original population.
+
+```{r build-plot-data}
+# Combine into a single tidy data frame for ggplot
+sampling_data <- bind_rows(
+  data.frame(mean_val = means_small,  sample_size = paste0("Small (n = ", small_n, ")")),
+  data.frame(mean_val = means_medium, sample_size = paste0("Medium (n = ", medium_n, ")")),
+  data.frame(mean_val = means_large,  sample_size = paste0("Large (n = ", large_n, ")"))
+)
+
+# Keep factor order: Small → Medium → Large
+sampling_data$sample_size <- factor(
+  sampling_data$sample_size,
+  levels = c(
+    paste0("Small (n = ", small_n, ")"),
+    paste0("Medium (n = ", medium_n, ")"),
+    paste0("Large (n = ", large_n, ")")
+  )
+)
+
+# Compute summary stats per group for annotation
+summary_stats <- sampling_data %>%
+  group_by(sample_size) %>%
+  summarise(
+    mean_of_means = mean(mean_val),
+    sd_of_means   = sd(mean_val),
+    .groups = "drop"
+  )
+
+print(summary_stats)
+```
+
+```{r main-plot, fig.width=12, fig.height=7}
+ggplot(sampling_data, aes(x = mean_val, fill = sample_size)) +
+  geom_histogram(aes(y = after_stat(density)), bins = 50,
+                 color = "white", alpha = 0.85) +
+
+  # Overlay a normal curve using each group's observed mean and SD
+  stat_function(
+    data = filter(sampling_data, sample_size == paste0("Small (n = ", small_n, ")")),
+    fun = dnorm,
+    args = list(
+      mean = filter(summary_stats, grepl("Small", sample_size))$mean_of_means,
+      sd   = filter(summary_stats, grepl("Small", sample_size))$sd_of_means
+    ),
+    color = "#c97aaa", linewidth = 1.1
+  ) +
+  stat_function(
+    data = filter(sampling_data, sample_size == paste0("Medium (n = ", medium_n, ")")),
+    fun = dnorm,
+    args = list(
+      mean = filter(summary_stats, grepl("Medium", sample_size))$mean_of_means,
+      sd   = filter(summary_stats, grepl("Medium", sample_size))$sd_of_means
+    ),
+    color = "#c97aaa", linewidth = 1.1
+  ) +
+  stat_function(
+    data = filter(sampling_data, sample_size == paste0("Large (n = ", large_n, ")")),
+    fun = dnorm,
+    args = list(
+      mean = filter(summary_stats, grepl("Large", sample_size))$mean_of_means,
+      sd   = filter(summary_stats, grepl("Large", sample_size))$sd_of_means
+    ),
+    color = "#c97aaa", linewidth = 1.1
+  ) +
+
+  # True population mean line
+  geom_vline(xintercept = pop_mean, color = "#7a7a8c", linewidth = 1,
+             linetype = "dashed") +
+
+  facet_wrap(~ sample_size, scales = "free_y", ncol = 3) +
+  scale_fill_manual(values = c("#b5ead7", "#a8d8ea", "#cdb4db")) +
+  labs(
+    title = "Sampling Distribution of the Mean at Three Sample Sizes",
+    subtitle = paste0(
+      "Red curve = fitted normal. Black dashed line = true population mean (",
+      round(pop_mean, 2), "). 1000 samples each."
+    ),
+    x = "Sample Mean",
+    y = "Density",
+    fill = "Sample Size"
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(legend.position = "none", strip.text = element_text(face = "bold", size = 13))
+```
+
+---
+
+## Step 4: What's Actually Happening?
+
+### Small Sample Size (n = 5)
+
+```{r explain-small}
+s <- filter(summary_stats, grepl("Small", sample_size))
+cat("Mean of sample means:", round(s$mean_of_means, 3), "\n")
+cat("SD of sample means (Standard Error):", round(s$sd_of_means, 3), "\n")
+cat("Predicted SE = pop_sd / sqrt(n):", round(pop_sd / sqrt(small_n), 3), "\n")
+```
+
+With only 5 observations per sample, each sample is heavily influenced by random chance. A single unusually large value can drag the mean way up. The distribution of sample means is still **skewed** and **wide** — it doesn't look very normal yet, and our estimates are unreliable.
+
+---
+
+### Medium Sample Size (n = 30)
+
+```{r explain-medium}
+s <- filter(summary_stats, grepl("Medium", sample_size))
+cat("Mean of sample means:", round(s$mean_of_means, 3), "\n")
+cat("SD of sample means (Standard Error):", round(s$sd_of_means, 3), "\n")
+cat("Predicted SE = pop_sd / sqrt(n):", round(pop_sd / sqrt(medium_n), 3), "\n")
+```
+
+With 30 observations, the distribution of sample means starts to look **bell-shaped**. This is the CLT kicking in. The spread (standard error) is noticeably narrower — our estimates are more reliable. n = 30 is a classic rule-of-thumb threshold in statistics.
+
+---
+
+### Large Sample Size (n = 100)
+
+```{r explain-large}
+s <- filter(summary_stats, grepl("Large", sample_size))
+cat("Mean of sample means:", round(s$mean_of_means, 3), "\n")
+cat("SD of sample means (Standard Error):", round(s$sd_of_means, 3), "\n")
+cat("Predicted SE = pop_sd / sqrt(n):", round(pop_sd / sqrt(large_n), 3), "\n")
+```
+
+With 100 observations, the sampling distribution is **tightly clustered around the true mean** and very close to a perfect normal curve. Notice the standard error has shrunk dramatically. We can trust sample means from large samples much more.
+
+---
+
+## Step 5: The Standard Error Formula
+
+The **standard error (SE)** measures how much sample means vary:
+
+$$SE = \frac{\sigma}{\sqrt{n}}$$
+
+where $\sigma$ is the population standard deviation and $n$ is the sample size. Let's verify this matches what we observed:
+
+```{r se-comparison, fig.width=8, fig.height=5}
+ns <- c(small_n, medium_n, large_n)
+observed_se <- c(sd(means_small), sd(means_medium), sd(means_large))
+predicted_se <- pop_sd / sqrt(ns)
+
+se_df <- data.frame(
+  n            = ns,
+  observed_se  = observed_se,
+  predicted_se = predicted_se
+) %>%
+  pivot_longer(cols = c(observed_se, predicted_se),
+               names_to = "type", values_to = "se") %>%
+  mutate(type = recode(type,
+    "observed_se"  = "Observed SE (from simulation)",
+    "predicted_se" = "Predicted SE (σ / √n)"
+  ))
+
+ggplot(se_df, aes(x = factor(n), y = se, fill = type)) +
+  geom_col(position = "dodge", width = 0.6, alpha = 0.9) +
+  scale_fill_manual(values = c("#a8d8ea", "#ffcba4")) +
+  labs(
+    title = "Observed vs. Predicted Standard Error",
+    subtitle = "The formula σ/√n closely matches what we see in simulation",
+    x = "Sample Size (n)",
+    y = "Standard Error",
+    fill = NULL
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(legend.position = "top")
+```
+
+The bars match almost exactly — this confirms the SE formula is correct and that our simulation behaves as theory predicts.
+
+---
+
+## Step 6: The Shrinking Spread — All Three Overlaid
+
+One final plot to drive home how sample size controls the spread of the sampling distribution:
+
+```{r overlay-plot, fig.width=9, fig.height=5}
+ggplot(sampling_data, aes(x = mean_val, fill = sample_size, color = sample_size)) +
+  geom_density(alpha = 0.35, linewidth = 1.1) +
+  geom_vline(xintercept = pop_mean, linetype = "dashed", color = "black", linewidth = 1) +
+  scale_fill_manual(values  = c("#b5ead7", "#a8d8ea", "#cdb4db")) +
+  scale_color_manual(values = c("#7dbfa5", "#6fb3cc", "#a07bbf")) +
+  annotate("text", x = pop_mean + 0.8, y = Inf, vjust = 2,
+           label = "True mean", size = 3.5) +
+  labs(
+    title = "Sampling Distributions Overlaid — Three Sample Sizes",
+    subtitle = "Larger n → tighter, taller, more normal distribution of sample means",
+    x = "Sample Mean",
+    y = "Density",
+    fill = "Sample Size",
+    color = "Sample Size"
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(legend.position = "right")
+```
+
+---
+
+## Key Takeaways
+
+| Concept | What it means |
+|---|---|
+| **Sampling distribution** | Distribution of a statistic (here: the mean) computed from many samples |
+| **Central Limit Theorem** | Sample means approach normality as n grows, *regardless* of population shape |
+| **Standard Error** | How much sample means vary; equals σ/√n |
+| **Larger n → smaller SE** | Bigger samples give more precise, reliable estimates |
+| **n ≈ 30 rule of thumb** | Often cited as sufficient for CLT to "kick in" for moderately skewed populations |
+
+The CLT is why so many statistical tests (t-tests, z-tests, confidence intervals) assume normality — not because the *data* is normal, but because the *sample means* are approximately normal when n is large enough.
