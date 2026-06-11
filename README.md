@@ -1,5 +1,8 @@
 # Summer Intensive 2026 — Tanishka Joshi
-Coding and R projects from the summer intensive at the Gresham Lab.
+
+**Live site:** https://tanishkajoshi.github.io/summerintensive2026-repository/
+
+Research and computational work from the Gresham Lab Summer Research Intensive, May–June 2026.
 
 ---
 

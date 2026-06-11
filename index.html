@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tanishka Joshi | Gresham Lab Summer Research 2026</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --teal:      #4a6b52;
+      --teal-light:#5e8a68;
+      --teal-pale: #eaf0e8;
+      --sand:      #f5f0e2;
+      --text:      #1a1a1a;
+      --muted:     #2a2a2a;
+      --border:    #c9d8c5;
+      --radius:    8px;
+      --max:       900px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text);
+      background: #fff;
+    }
+
+    a { color: var(--teal-light); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky;
+      top: 0;
+      background: var(--teal);
+      z-index: 100;
+      padding: 0 2rem;
+    }
+    nav ul {
+      display: flex;
+      gap: 0.25rem;
+      list-style: none;
+      max-width: var(--max);
+      margin: 0 auto;
+      flex-wrap: wrap;
+    }
+    nav a {
+      display: block;
+      color: #fff;
+      padding: 0.75rem 0.9rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      opacity: 0.75;
+      transition: opacity 0.15s;
+      position: relative;
+    }
+    nav a::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0.9rem;
+      right: 0.9rem;
+      height: 2px;
+      background: #fff;
+      transform: scaleX(0);
+      transition: transform 0.2s;
+    }
+    nav a:hover { opacity: 1; text-decoration: none; }
+    nav a:hover::after { transform: scaleX(1); }
+
+    /* ── HERO ── */
+    #hero {
+      background-color: var(--teal);
+      background-image:
+        radial-gradient(circle at 20% 50%, rgba(255,255,255,0.06) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255,255,255,0.08) 0%, transparent 40%),
+        url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='2' cy='2' r='1.5' fill='rgba(255,255,255,0.07)'/%3E%3C/svg%3E");
+      background-size: auto, auto, 24px 24px;
+      color: #fff;
+      padding: 6rem 2rem 5rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    #hero .profile-photo {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      object-fit: cover;
+      object-position: center top;
+      border: 4px solid rgba(255,255,255,0.4);
+      margin-bottom: 1.5rem;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    }
+    #hero h1 {
+      font-size: clamp(2.4rem, 6vw, 3.8rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.5rem;
+      line-height: 1.1;
+    }
+    #hero .tagline {
+      font-size: 1rem;
+      opacity: 0.8;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+
+    /* ── SECTIONS ── */
+    section {
+      padding: 4rem 2rem;
+      max-width: var(--max);
+      margin: 0 auto;
+    }
+    .full-bleed {
+      background: var(--sand);
+      max-width: 100%;
+      padding: 4rem 2rem;
+    }
+    .full-bleed > .inner {
+      max-width: var(--max);
+      margin: 0 auto;
+    }
+    .teal-bleed {
+      background: var(--teal-pale);
+      max-width: 100%;
+      padding: 4rem 2rem;
+    }
+    .teal-bleed > .inner {
+      max-width: var(--max);
+      margin: 0 auto;
+    }
+
+    h2 {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--teal);
+      margin-bottom: 1.5rem;
+      display: inline-block;
+      position: relative;
+      padding-bottom: 0.4rem;
+    }
+    h2::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--teal), transparent);
+      border-radius: 2px;
+    }
+    section h2, .full-bleed h2, .teal-bleed h2 {
+      display: block;
+    }
+    section h2::after, .full-bleed h2::after, .teal-bleed h2::after {
+      width: 60px;
+    }
+    h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--teal);
+      margin-bottom: 0.4rem;
+    }
+    p { margin-bottom: 0.9rem; color: var(--muted); }
+    p:last-child { margin-bottom: 0; }
+
+    /* ── BOOTCAMP INFO ── */
+    .bootcamp-meta {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+    .bootcamp-meta .item {
+      display: flex;
+      flex-direction: column;
+    }
+    .bootcamp-meta .label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--teal);
+      margin-bottom: 0.1rem;
+    }
+    .bootcamp-meta .value { color: var(--muted); font-size: 0.95rem; }
+
+    .topic-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    .topic-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem 1.1rem;
+    }
+    .topic-card .tc-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--teal-light);
+      margin-bottom: 0.5rem;
+    }
+    .topic-card ul {
+      list-style: none;
+      padding: 0;
+    }
+    .topic-card li {
+      font-size: 0.88rem;
+      color: var(--muted);
+      padding: 0.15rem 0;
+    }
+    .topic-card li::before { content: "· "; color: var(--teal-light); }
+
+    /* ── PROJECT CARDS ── */
+    .project-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1.25rem;
+    }
+    .project-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--teal-light);
+      border-radius: var(--radius);
+      padding: 1.4rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .project-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(74, 107, 82, 0.12);
+    }
+    .project-card .badge {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      background: var(--teal-pale);
+      color: var(--teal);
+      border-radius: 4px;
+      padding: 0.2rem 0.5rem;
+      margin-bottom: 0.1rem;
+    }
+    .project-card h3 { font-size: 1rem; }
+    .project-card p { font-size: 0.9rem; margin-bottom: 0; }
+    .methods {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      margin-top: 0.25rem;
+    }
+    .method-tag {
+      font-size: 0.75rem;
+      background: #e8ece6;
+      color: #1a1a1a;
+      border-radius: 3px;
+      padding: 0.15rem 0.45rem;
+    }
+    .img-placeholder {
+      width: 100%;
+      aspect-ratio: 16/9;
+      border: 2px dashed var(--border);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #7a8c7b;
+      font-size: 0.8rem;
+      text-align: center;
+      padding: 0.5rem;
+      background: #f2efe8;
+      margin-top: 0.5rem;
+    }
+
+    /* ── COMPUTATIONAL WORK ── */
+    .comp-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1.25rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .comp-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--teal-light);
+      border-radius: var(--radius);
+      padding: 1.4rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .comp-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(74, 107, 82, 0.12);
+    }
+    .comp-card h3 { font-size: 1rem; }
+    .comp-card p { font-size: 0.9rem; margin-bottom: 0; }
+    .comp-card a.btn {
+      display: inline-block;
+      margin-top: auto;
+      padding: 0.45rem 0.9rem;
+      background: var(--teal);
+      color: #fff;
+      border-radius: 5px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      width: fit-content;
+      transition: background 0.15s;
+    }
+    .comp-card a.btn:hover { background: var(--teal-light); text-decoration: none; }
+
+    /* ── ABOUT ── */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 2.5rem;
+      align-items: start;
+    }
+    @media (max-width: 600px) { .about-grid { grid-template-columns: 1fr; } }
+
+    .about-sidebar h3 { margin-bottom: 0.75rem; }
+    .about-sidebar ul {
+      list-style: none;
+      padding: 0;
+    }
+    .about-sidebar li {
+      font-size: 0.9rem;
+      color: var(--muted);
+      padding: 0.25rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .about-sidebar li:last-child { border-bottom: none; }
+
+    .next-badge {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      background: #e8dfc8;
+      color: #6b5a2e;
+      border-radius: 4px;
+      padding: 0.2rem 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    /* ── SKILLS ── */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+    @media (max-width: 500px) { .skills-grid { grid-template-columns: 1fr; } }
+
+    .skill-col h3 { margin-bottom: 1rem; }
+    .skill-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+    .skill-tag {
+      font-size: 0.82rem;
+      background: #fff;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      border-radius: 20px;
+      padding: 0.3rem 0.85rem;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .skill-tag:hover {
+      background: var(--teal-pale);
+      border-color: var(--teal-light);
+    }
+
+    /* ── RESUME ── */
+    .resume-block { margin-bottom: 2.5rem; }
+    .resume-block:last-child { margin-bottom: 0; }
+
+    .resume-section-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--teal-light);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.4rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .resume-entry { margin-bottom: 1.25rem; }
+    .resume-entry:last-child { margin-bottom: 0; }
+
+    .resume-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 0.2rem;
+    }
+    .resume-org {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--text);
+    }
+    .resume-date {
+      font-size: 0.85rem;
+      color: var(--teal);
+      white-space: nowrap;
+    }
+    .resume-role {
+      font-size: 0.88rem;
+      color: var(--muted);
+      margin-bottom: 0.4rem;
+    }
+    .resume-list {
+      padding-left: 1.1rem;
+      margin: 0;
+    }
+    .resume-list li {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 0.25rem;
+    }
+
+    .resume-courses {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 0.5rem;
+    }
+    .course-item {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.88rem;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.4rem 0.75rem;
+    }
+    .course-name { color: var(--text); }
+    .course-term { color: var(--teal); font-size: 0.8rem; white-space: nowrap; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--teal);
+      color: rgba(255,255,255,0.85);
+      text-align: center;
+      padding: 2.5rem 2rem;
+      font-size: 0.9rem;
+    }
+    footer a { color: rgba(255,255,255,0.9); text-decoration: underline; }
+    footer .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+    footer .footer-links a {
+      font-weight: 600;
+      font-size: 0.88rem;
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <ul>
+    <li><a href="#about">About Me</a></li>
+    <li><a href="#projects">Lab Projects</a></li>
+    <li><a href="#computational">Computational Work</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="resume.html">Resume</a></li>
+    <li><a href="#next-project">What's Next</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <img src="images/profile.jpg.png" alt="Tanishka Joshi" class="profile-photo" />
+  <h1>Tanishka Joshi</h1>
+  <p class="tagline">Biology Undergraduate &nbsp;·&nbsp; NYU</p>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <h2>About Me</h2>
+  <div class="about-grid">
+    <div class="about-main">
+      <p>
+        I'm a second-year Biology undergraduate at NYU, minoring in Global Public Health and a Presidential Honors Scholar. I'm broadly interested in how molecular mechanisms drive cell survival — particularly in contexts where that survival has clinical consequences.
+      </p>
+      <p>
+        My interest in cellular quiescence started with reading about <em>Candida albicans</em>: quiescent fungal cells survive antifungal treatment and can re-enter the cell cycle later, which may contribute to persistent and drug-resistant infections. The Gresham Lab uses <em>S. cerevisiae</em> as a model to understand exactly how cells regulate entry into and exit from this state — and I find that question genuinely fascinating.
+      </p>
+
+    </div>
+
+    <div class="about-sidebar">
+      <h3>At a Glance</h3>
+      <ul>
+        <li>NYU, B.A. Biology (exp. 2028)</li>
+        <li>Minor: Global Public Health</li>
+        <li>Presidential Honors Scholar</li>
+        <li>GPA: 3.7</li>
+        <li>National Phlebotomy Certification (NHA)</li>
+        <li>Languages: English, Marathi; conversational Spanish &amp; Hindi</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- LAB PROJECTS -->
+<section id="projects">
+  <h2>Lab Projects</h2>
+  <div class="project-grid">
+
+    <div class="project-card">
+      <span class="badge">Project 1</span>
+      <h3>Yeast-Display Systems — GFP &amp; mCherry</h3>
+      <p>
+        Generated and tested yeast surface-display systems using two different fluorescent proteins (GFP and mCherry). This involved designing and constructing the display constructs and validating protein expression using cell imaging and flow cytometry.
+      </p>
+      <div class="methods">
+        <span class="method-tag">Gibson Assembly</span>
+        <span class="method-tag">CRISPR/Cas9</span>
+        <span class="method-tag">Flow Cytometry</span>
+        <span class="method-tag">Fluorescence Microscopy</span>
+        <span class="method-tag">Yeast Transformation</span>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <span class="badge">Project 2</span>
+      <h3>CNV Reporter Strain Library — <em>GAP1</em> Locus</h3>
+      <p>
+        Contributed to building a genome-wide library of copy number variation (CNV) reporter strains at the <em>GAP1</em> locus in budding yeast. CNV reporter strains allow real-time monitoring of gene copy number changes, which can drive rapid adaptive evolution.
+      </p>
+      <div class="methods">
+        <span class="method-tag">PCR</span>
+        <span class="method-tag">Gel Electrophoresis</span>
+        <span class="method-tag">Plasmid Design</span>
+        <span class="method-tag">Yeast Transformation</span>
+        <span class="method-tag">Replica Plating</span>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <span class="badge">Project 3</span>
+      <h3>Whole Genome Resequencing</h3>
+      <p>
+        Prepared and analyzed whole genome resequencing data to identify mutations and genomic variants. This involved both wet-lab library preparation and a full computational pipeline from raw reads to variant calls.
+      </p>
+      <div class="methods">
+        <span class="method-tag">DNA Library Prep</span>
+        <span class="method-tag">WGS</span>
+        <span class="method-tag">bwa</span>
+        <span class="method-tag">GATK</span>
+        <span class="method-tag">DESeq2</span>
+        <span class="method-tag">Unix</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- COMPUTATIONAL WORK -->
+<div class="teal-bleed" id="computational">
+  <div class="inner">
+    <h2>Computational Work</h2>
+    <p style="margin-bottom:1.5rem;">
+      Alongside wet lab work, the intensive involved real data analysis in R. The notebooks below were written as part of the program — click to open the full rendered HTML reports.
+    </p>
+    <div class="comp-grid">
+
+      <div class="comp-card">
+        <span class="badge" style="background:var(--teal-pale);color:var(--teal);">R Notebook</span>
+        <h3>Flow Cytometry Analysis</h3>
+        <p>
+          Analysis of flow cytometry data from <em>S. cerevisiae</em> yeast-display experiments, examining fluorescence distributions to assess GFP and mCherry protein expression across cell populations.
+        </p>
+        <a class="btn" href="flow_cytometry_june9_2026.html" target="_blank">View Notebook →</a>
+      </div>
+
+      <div class="comp-card">
+        <span class="badge" style="background:var(--teal-pale);color:var(--teal);">R Notebook</span>
+        <h3>Growth Curve Analysis</h3>
+        <p>
+          Analyzed OD data from a 96-well Tecan plate reader for <em>S. cerevisiae</em> knockout strains grown over 24 hours. Used the <code>growthcurver</code> package to fit growth data to the logistic equation, extracting growth rate (<em>r</em>), carrying capacity (<em>k</em>), generation time, and area under the curve (AUC). Includes pairwise parameter correlations and per-sample summaries.
+        </p>
+        <a class="btn" href="growth_curves_gresham_lab-6-5-26.html" target="_blank">View Notebook →</a>
+      </div>
+
+
+    </div>
+  </div>
+</div>
+
+<!-- SKILLS -->
+<div class="full-bleed" id="skills">
+  <div class="inner">
+    <h2>Skills</h2>
+    <div class="skills-grid">
+      <div class="skill-col">
+        <h3>Wet Lab</h3>
+        <div class="skill-tags">
+          <span class="skill-tag">PCR</span>
+          <span class="skill-tag">Gel Electrophoresis</span>
+          <span class="skill-tag">Gibson Assembly</span>
+          <span class="skill-tag">DNA Purification</span>
+          <span class="skill-tag">Plasmid Design</span>
+          <span class="skill-tag">CRISPR/Cas9</span>
+          <span class="skill-tag">Yeast Transformation</span>
+          <span class="skill-tag">Backcrossing &amp; Tetrad Dissection</span>
+          <span class="skill-tag">Replica Plating</span>
+          <span class="skill-tag">Flow Cytometry</span>
+          <span class="skill-tag">Fluorescence Microscopy</span>
+          <span class="skill-tag">DNA Library Prep</span>
+          <span class="skill-tag">96-Well Plate Reader</span>
+          <span class="skill-tag">Media Preparation</span>
+          <span class="skill-tag">Autoclaving</span>
+        </div>
+      </div>
+      <div class="skill-col">
+        <h3>Computational</h3>
+        <div class="skill-tags">
+          <span class="skill-tag">R</span>
+          <span class="skill-tag">ggplot2</span>
+          <span class="skill-tag">growthcurver</span>
+          <span class="skill-tag">tidyverse</span>
+          <span class="skill-tag">Unix / Command Line</span>
+          <span class="skill-tag">bwa</span>
+          <span class="skill-tag">GATK</span>
+          <span class="skill-tag">DESeq2</span>
+          <span class="skill-tag">GitHub</span>
+          <span class="skill-tag">R Markdown</span>
+          <span class="skill-tag">Python</span>
+          <span class="skill-tag">Statistical Analysis</span>
+          <span class="skill-tag">Bioinformatics Pipelines</span>
+          <span class="skill-tag">Claude Code</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- NEXT PROJECT -->
+<section id="next-project">
+  <h2>What's Next</h2>
+  <div class="next-badge">Coming Fall 2026</div>
+  <h3 style="margin-top:0.75rem;">Sic1 &amp; Cellular Quiescence</h3>
+  <p>
+    Continuing in the Gresham Lab this fall, I'll be investigating whether Sic1 — a cyclin-dependent kinase inhibitor that blocks cell-cycle entry — accumulates at higher levels in quiescent cells compared to actively proliferating ones. If so, Sic1 abundance could serve as a molecular marker of quiescence. The project uses iodixanol density-gradient centrifugation to separate quiescent and proliferating yeast populations, followed by Western blotting to quantify Sic1 protein levels.
+  </p>
+</section>
+
+<!-- FOOTER / CONTACT -->
+<footer id="contact">
+  <div class="footer-links">
+    <a href="mailto:tj2487@nyu.edu">tj2487@nyu.edu</a>
+    <a href="https://github.com/tanishkajoshi" target="_blank">GitHub</a>
+  </div>
+  <p>Tanishka Joshi &nbsp;·&nbsp; NYU Biology, Class of 2028</p>
+</footer>
+
+</body>
+</html>

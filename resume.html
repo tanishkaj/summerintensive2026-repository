@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resume — Tanishka Joshi</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --teal:      #4a6b52;
+      --teal-light:#5e8a68;
+      --teal-pale: #eaf0e8;
+      --sand:      #f5f0e2;
+      --text:      #1a1a1a;
+      --muted:     #2a2a2a;
+      --border:    #c9d8c5;
+      --radius:    8px;
+      --max:       900px;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text);
+      background: #fff;
+    }
+
+    a { color: var(--teal-light); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    nav {
+      position: sticky;
+      top: 0;
+      background: var(--teal);
+      z-index: 100;
+      padding: 0 2rem;
+    }
+    nav ul {
+      display: flex;
+      gap: 0.25rem;
+      list-style: none;
+      max-width: var(--max);
+      margin: 0 auto;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    nav a {
+      display: block;
+      color: #fff;
+      padding: 0.75rem 0.9rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      opacity: 0.75;
+      transition: opacity 0.15s;
+      position: relative;
+    }
+    nav a::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0.9rem;
+      right: 0.9rem;
+      height: 2px;
+      background: #fff;
+      transform: scaleX(0);
+      transition: transform 0.2s;
+    }
+    nav a:hover { opacity: 1; text-decoration: none; }
+    nav a:hover::after { transform: scaleX(1); }
+    nav .back { opacity: 1; font-weight: 700; }
+
+    header {
+      background-color: var(--teal);
+      background-image:
+        radial-gradient(circle at 20% 50%, rgba(255,255,255,0.06) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255,255,255,0.08) 0%, transparent 40%),
+        url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='2' cy='2' r='1.5' fill='rgba(255,255,255,0.07)'/%3E%3C/svg%3E");
+      background-size: auto, auto, 24px 24px;
+      color: #fff;
+      padding: 4.5rem 2rem 3.5rem;
+      text-align: center;
+    }
+    header h1 {
+      font-size: clamp(2.4rem, 6vw, 3.8rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin-bottom: 0.5rem;
+    }
+    header p {
+      opacity: 0.8;
+      font-size: 0.95rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+
+    main {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 3rem 2rem 4rem;
+    }
+
+    .resume-block { margin-bottom: 2.75rem; }
+    .resume-block:last-child { margin-bottom: 0; }
+
+    .resume-section-title {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--teal);
+      padding-bottom: 0.5rem;
+      margin-bottom: 1.25rem;
+      position: relative;
+    }
+    .resume-section-title::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 40px;
+      height: 2px;
+      background: linear-gradient(90deg, var(--teal), transparent);
+      border-radius: 2px;
+    }
+
+    .resume-entry { margin-bottom: 1.4rem; }
+    .resume-entry:last-child { margin-bottom: 0; }
+
+    .resume-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 0.2rem;
+    }
+    .resume-org { font-weight: 600; font-size: 0.95rem; color: var(--text); }
+    .resume-date { font-size: 0.85rem; color: var(--teal); white-space: nowrap; }
+    .resume-role { font-size: 0.88rem; color: var(--muted); margin-bottom: 0.4rem; }
+
+    ul.resume-list { padding-left: 1.1rem; margin: 0; }
+    ul.resume-list li { font-size: 0.9rem; color: var(--muted); margin-bottom: 0.25rem; }
+
+    .resume-courses {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 0.5rem;
+    }
+    .course-item {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.88rem;
+      background: var(--sand);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--teal-light);
+      border-radius: var(--radius);
+      padding: 0.4rem 0.75rem;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .course-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(74, 107, 82, 0.1);
+    }
+    .course-name { color: var(--text); }
+    .course-term { color: var(--teal); font-size: 0.8rem; white-space: nowrap; }
+
+    footer {
+      background: var(--teal);
+      color: rgba(255,255,255,0.85);
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <ul>
+    <li><a class="back" href="index.html">← Back to Site</a></li>
+  </ul>
+</nav>
+
+<header>
+  <h1>Tanishka Joshi</h1>
+  <p>tj2487@nyu.edu &nbsp;·&nbsp; NYU Biology, Class of 2028</p>
+</header>
+
+<main>
+
+  <div class="resume-block">
+    <h3 class="resume-section-title">Education</h3>
+
+    <div class="resume-entry">
+      <div class="resume-header">
+        <span class="resume-org">New York University</span>
+        <span class="resume-date">May 2028</span>
+      </div>
+      <div class="resume-role">B.A. in Biology &nbsp;·&nbsp; GPA: 3.7 &nbsp;·&nbsp; New York, NY</div>
+      <ul class="resume-list">
+        <li>Minor in Global Public Health</li>
+        <li>Presidential Honors Scholar</li>
+      </ul>
+    </div>
+
+    <div class="resume-entry">
+      <div class="resume-header">
+        <span class="resume-org">Whitney High School</span>
+        <span class="resume-date">May 2024</span>
+      </div>
+      <div class="resume-role">Diploma &nbsp;·&nbsp; GPA: 4.23 &nbsp;·&nbsp; Los Angeles, CA</div>
+    </div>
+  </div>
+
+  <div class="resume-block">
+    <h3 class="resume-section-title">Research</h3>
+
+    <div class="resume-entry">
+      <div class="resume-header">
+        <span class="resume-org">The Gresham Lab, NYU</span>
+        <span class="resume-date">2026</span>
+      </div>
+      <ul class="resume-list">
+        <li>Under the guidance of Professor David Gresham, gaining hands-on experience in molecular and cell biology research using yeast models, including PCR and molecular cloning techniques</li>
+        <li>Lab focuses on cell quiescence, adaptive evolution, and the effects of copy number variation on gene functions</li>
+      </ul>
+    </div>
+
+    <div class="resume-entry">
+      <div class="resume-header">
+        <span class="resume-org">South Asian Mental Health Conference</span>
+        <span class="resume-date">2023</span>
+      </div>
+      <ul class="resume-list">
+        <li>With the mentorship of Dr. Marcus Crawford and Dr. Shruti Khanna, collaborated on a research paper regarding the effect of Covid on mental health</li>
+        <li>Presented a poster presentation discussing findings at the South Asian Mental Health Consortium 2023</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="resume-block">
+    <h3 class="resume-section-title">Experience</h3>
+
+    <div class="resume-entry">
+      <div class="resume-header">
+        <span class="resume-org">Gresham Lab, NYU &nbsp;·&nbsp; Summer Research Intensive</span>
+        <span class="resume-date">May–June 2026</span>
+      </div>
+      <div class="resume-role">Undergraduate Researcher &nbsp;·&nbsp; New York, NY</div>
+      <ul class="resume-list">
+        <li>Full-time (9am–5pm) project-based research intensive under Professor David Gresham focused on experimental and computational biology</li>
+        <li>Contributed to three lab projects: construction of a genome-wide CNV reporter strain library for the <em>GAP1</em> locus, generation and testing of yeast-display systems using GFP and mCherry, and preparation and analysis of whole genome resequencing data</li>
+        <li>Performed molecular biology techniques including PCR, gel electrophoresis, Gibson assembly, DNA purification, CRISPR/Cas9 genome engineering, yeast transformation, and flow cytometry</li>
+        <li>Completed computational analyses in R and Unix, including growth curve modeling with <code>growthcurver</code>, bioinformatics pipelines using bwa, GATK, and DESeq2, and statistical analysis and data visualization</li>
+      </ul>
+    </div>
+
+    <div class="resume-entry">
+      <div class="resume-header">
+        <span class="resume-org">Honor Academy &nbsp;·&nbsp; Speech and Debate Coach</span>
+        <span class="resume-date">2023–Present</span>
+      </div>
+      <ul class="resume-list">
+        <li>Coach 30–40 students per semester to compete nationally in public forum debate</li>
+        <li>Handle general secretarial work, including efficient correspondence with parents and scheduling classes in collaboration with management and staff</li>
+        <li>Oversee 30+ students during weekend tournaments, coordinating logistics and serving on-call as a judge</li>
+      </ul>
+    </div>
+
+    <div class="resume-entry">
+      <div class="resume-header">
+        <span class="resume-org">St. Andrews Medical Center &nbsp;·&nbsp; Phlebotomy Externship</span>
+        <span class="resume-date">June–August 2025</span>
+      </div>
+      <ul class="resume-list">
+        <li>Counseled low-income patients in accessing free/low-cost bloodwork by alerting them to available resources and facilitating communication with supporting healthcare clinics and agencies</li>
+        <li>Conducted venipuncture blood draws on patients with varying health complications and test requirements, ensuring patient-focused care</li>
+        <li>Implemented an efficient paper-based record system tailored to the clinic's small scale, streamlining cataloguing of Protected Health Information</li>
+      </ul>
+    </div>
+
+    <div class="resume-entry">
+      <div class="resume-header">
+        <span class="resume-org">Muddy Paws Rescue &nbsp;·&nbsp; Medical Assistant</span>
+        <span class="resume-date">2024–2025</span>
+      </div>
+      <ul class="resume-list">
+        <li>Executed pre- and post-operative tasks such as preparing and sterilizing surgical tools and collecting biological samples for testing</li>
+        <li>Assisted during procedures on animal patients by stabilizing surgical instruments and monitoring oxygen and heart rate levels throughout surgery</li>
+      </ul>
+    </div>
+
+    <div class="resume-entry">
+      <div class="resume-header">
+        <span class="resume-org">Kumon &nbsp;·&nbsp; Tutor</span>
+        <span class="resume-date">2022–2024</span>
+      </div>
+      <ul class="resume-list">
+        <li>Worked with students from ages 2 to 14 to master mathematics, history, language arts, and science concepts</li>
+        <li>Scheduled tutoring sessions, communicating between management, parents, and staff</li>
+      </ul>
+    </div>
+
+    <div class="resume-entry">
+      <div class="resume-header">
+        <span class="resume-org">Saahas For Cause &nbsp;·&nbsp; Co-President</span>
+        <span class="resume-date">2023–2024</span>
+      </div>
+      <ul class="resume-list">
+        <li>Managed 75+ volunteers across the U.S. and India in a 501(c)(3) national non-profit organization</li>
+        <li>Organized clinics with physicians across LA County to provide free health screenings and medical guidance</li>
+        <li>Headed program providing passport/VISA application assistance in various South Asian languages</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="resume-block">
+    <h3 class="resume-section-title">Relevant Coursework</h3>
+    <div class="resume-courses">
+      <div class="course-item"><span class="course-name">Molecular &amp; Cellular Biology I + Lab</span><span class="course-term">Fall 2025</span></div>
+      <div class="course-item"><span class="course-name">Organic Chemistry I + Lab</span><span class="course-term">Fall 2025</span></div>
+      <div class="course-item"><span class="course-name">Principles of Biology I</span><span class="course-term">Fall 2025</span></div>
+      <div class="course-item"><span class="course-name">General Chemistry II + Lab</span><span class="course-term">Spring 2025</span></div>
+      <div class="course-item"><span class="course-name">Principles of Biology II</span><span class="course-term">Spring 2025</span></div>
+      <div class="course-item"><span class="course-name">General Chemistry I + Lab</span><span class="course-term">Fall 2024</span></div>
+    </div>
+  </div>
+
+  <div class="resume-block">
+    <h3 class="resume-section-title">Skills</h3>
+    <ul class="resume-list">
+      <li>Python, Microsoft Office (Word, Excel, PowerPoint), PC &amp; Macintosh</li>
+      <li>Fluent in English, Marathi; familiar in Spanish, Hindi</li>
+      <li>National Phlebotomy Certification issued by NHA (#D3B9Z3D5)</li>
+    </ul>
+  </div>
+
+  <div class="resume-block">
+    <h3 class="resume-section-title">Activities</h3>
+    <div class="resume-entry">
+      <div class="resume-header">
+        <span class="resume-org">Muddy Paws Rescue &nbsp;·&nbsp; Volunteer</span>
+        <span class="resume-date">2024–Present</span>
+      </div>
+    </div>
+    <div class="resume-entry">
+      <div class="resume-header">
+        <span class="resume-org">Peer Undergraduate Mentoring Program (PUMP)</span>
+        <span class="resume-date">2024–Present</span>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <p>Tanishka Joshi &nbsp;·&nbsp; tj2487@nyu.edu &nbsp;·&nbsp; NYU Biology, Class of 2028</p>
+</footer>
+
+</body>
+</html>
